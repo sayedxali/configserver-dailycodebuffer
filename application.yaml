@@ -1,15 +1,24 @@
-#eureka configuration
+--- # Eureka client
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
-  instance:
-    prefer-ip-address: true
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka
 
-#okta basic configuration
-okta:
-  oauth2:
-    issuer: https://dev-08460809.okta.com/oauth2/default
-    audience: api://default
+--- # Keycloak
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${KEYCLOAK_SERVER_HOST:localhost}:8080/realms/DevVault-v2.0
+
+--- # Swagger
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: ${KEYCLOAK_CLIENT_ID}
+      client-secret: ${KEYCLOAK_CLIENT_SECRET}
